@@ -1,13 +1,15 @@
 package com.ekos.koopper.shared;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ekos.koopper.shared.exceptions.custom.ResourceNotFoundException;
+
 public abstract class BaseCrud<T, ID> {
     protected abstract JpaRepository<T, ID> getRepository();
+    protected abstract Class<T> getEntityClass();
 
     @Transactional
     public T salvar(T entity) {
@@ -15,8 +17,8 @@ public abstract class BaseCrud<T, ID> {
     }
 
     @Transactional(readOnly = true)
-    public Optional<T> buscarPorId(ID id) {
-        return getRepository().findById(id);
+    public T buscarPorId(ID id) {
+        return getRepository().findById(id).orElseThrow(() -> new ResourceNotFoundException(getEntityClass()));
     }
 
     @Transactional(readOnly = true)
@@ -26,6 +28,8 @@ public abstract class BaseCrud<T, ID> {
 
     @Transactional
     public void deletar(ID id) {
-        getRepository().deleteById(id);
+        T entity = buscarPorId(id);
+
+        getRepository().delete(entity);
     }
 }

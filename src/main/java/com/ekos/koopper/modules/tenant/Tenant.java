@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tenant")
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
+@ToString
 public class Tenant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -41,7 +43,7 @@ public class Tenant extends BaseEntity {
     private String cnpj;
 
     @Column(nullable = false, unique = false)
-    private boolean allowCrossDepartmentView = false;
+    private boolean allowCrossDepartmentView;
 
     private LocalDateTime expiresDateContract;
 
@@ -51,5 +53,6 @@ public class Tenant extends BaseEntity {
         this.cnpj = tenantDto.cnpj();
         this.active = true;
         this.expiresDateContract = LocalDateTime.now().plusYears(1);
+        this.allowCrossDepartmentView = tenantDto.allowCrossDepartmentView();
     }
 }

@@ -32,8 +32,8 @@ public class TenantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Tenant> listById(@PathVariable UUID id) {
-        Tenant tenant = tenantService.buscarPorId(id).orElseThrow(RuntimeException::new);
-        
+        Tenant tenant = tenantService.buscarPorId(id);
+
         return ResponseEntity.ok().body(tenant);
     }
     

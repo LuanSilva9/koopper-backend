@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ekos.koopper.modules.tenant.dto.TenantRequestDTO;
 import com.ekos.koopper.modules.tenant.dto.TenantRequestEditableDTO;
 import com.ekos.koopper.shared.BaseCrud;
+import com.ekos.koopper.shared.exceptions.custom.ResourceConflictException;
 
 @Service
 public class TenantService extends BaseCrud<Tenant, UUID> {
@@ -21,6 +22,12 @@ public class TenantService extends BaseCrud<Tenant, UUID> {
         return tenantRepository;
     }
 
+    @Override
+    protected Class<Tenant> getEntityClass() {
+        return Tenant.class;
+    }
+
+
     public Tenant create(TenantRequestDTO tenantDto) {
         Tenant newTenant = new Tenant(tenantDto);
 
@@ -28,16 +35,21 @@ public class TenantService extends BaseCrud<Tenant, UUID> {
     }
 
     public Tenant edit(UUID id, TenantRequestEditableDTO tenantDto) {
-        Tenant tenant = buscarPorId(id).orElseThrow(RuntimeException::new);
+        Tenant tenant = buscarPorId(id);
 
-        if(!tenantDto.cnpj().equals(tenant.getCnpj()) && tenantRepository.existsByCnpjAndIdNot(tenantDto.cnpj(), id)) {
-            throw new RuntimeException("CNPJ já cadastrado");
-        };
+        validateCnpjUniqueness(tenant, tenantDto.cnpj());
 
         tenant.setName(tenantDto.name());
         tenant.setCnpj(tenantDto.cnpj());
         tenant.setAllowCrossDepartmentView(tenantDto.allowCrossDepartmentView());
 
         return salvar(tenant);
+    }
+
+
+    private void validateCnpjUniqueness(Tenant tenant, String cnpj) {
+        if (!cnpj.equals(tenant.getCnpj()) && tenantRepository.existsByCnpjAndIdNot(cnpj, tenant.getId())) {
+            throw new ResourceConflictException("Cnpj");
+        }
     }
 }
