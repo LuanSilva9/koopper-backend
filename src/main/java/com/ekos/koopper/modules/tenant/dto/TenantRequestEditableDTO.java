@@ -1,5 +1,7 @@
 package com.ekos.koopper.modules.tenant.dto;
 
-public record TenantRequestEditableDTO(String name, String cnpj, boolean allowCrossDepartmentView) {
+import jakarta.validation.constraints.NotBlank;
+
+public record TenantRequestEditableDTO(@NotBlank String name, @NotBlank String cnpj, @NotBlank boolean allowCrossDepartmentView) {
     
 }
