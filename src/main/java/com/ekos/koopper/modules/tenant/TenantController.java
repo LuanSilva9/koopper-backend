@@ -31,20 +31,19 @@ public class TenantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tenant> listById(@PathVariable UUID id) {
+    public ResponseEntity<Tenant> getById(@PathVariable UUID id) {
         Tenant tenant = tenantService.buscarPorId(id);
 
         return ResponseEntity.ok().body(tenant);
     }
-    
 
     @GetMapping
-    public ResponseEntity<List<Tenant>> list() {
+    public ResponseEntity<List<Tenant>> get() {
         return ResponseEntity.ok().body(tenantService.listarTodos());
     }
 
     @PostMapping
-    public ResponseEntity<Tenant> create(@RequestBody TenantRequestDTO tenantDto) {
+    public ResponseEntity<Tenant> create(@Valid @RequestBody TenantRequestDTO tenantDto) {
         Tenant tenantCreated = tenantService.create(tenantDto);
 
         URI uri = ServletUriComponentsBuilder
