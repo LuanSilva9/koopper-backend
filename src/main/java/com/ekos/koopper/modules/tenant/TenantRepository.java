@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TenantRepository extends JpaRepository<Tenant, UUID> {
     boolean existsByCnpjAndIdNot(String cnpj, UUID id);
+    boolean existsByCnpj(String cnpj);
 }

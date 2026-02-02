@@ -29,6 +29,8 @@ public class TenantService extends BaseCrud<Tenant, UUID> {
 
 
     public Tenant create(TenantRequestDTO tenantDto) {
+        if(tenantRepository.existsByCnpj(tenantDto.cnpj())) throw ResourceConflictException.alreadyExists("Cnpj");
+
         Tenant newTenant = new Tenant(tenantDto);
 
         return salvar(newTenant);
@@ -41,7 +43,6 @@ public class TenantService extends BaseCrud<Tenant, UUID> {
 
         tenant.setName(tenantDto.name());
         tenant.setCnpj(tenantDto.cnpj());
-        tenant.setAllowCrossDepartmentView(tenantDto.allowCrossDepartmentView());
 
         return salvar(tenant);
     }
@@ -49,7 +50,7 @@ public class TenantService extends BaseCrud<Tenant, UUID> {
 
     private void validateCnpjUniqueness(Tenant tenant, String cnpj) {
         if (!cnpj.equals(tenant.getCnpj()) && tenantRepository.existsByCnpjAndIdNot(cnpj, tenant.getId())) {
-            throw new ResourceConflictException("Cnpj");
+            throw ResourceConflictException.alreadyExists("Cnpj");
         }
     }
 }

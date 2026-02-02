@@ -34,9 +34,13 @@ public class Department extends BaseEntity {
     
     @Column(nullable = false, length = 120)
     private String name;
+    
+    @Column(nullable = false, unique = false)
+    private boolean allowCrossDepartmentView;
+
 
     @ManyToOne
-    @JoinColumn(name = "tenantId", referencedColumnName = "id")
+    @JoinColumn(name = "tenant_id", referencedColumnName = "id")
     private Tenant tenant;
 
     public Department(DepartmentRequestDTO departmentDto, Tenant tenant) {

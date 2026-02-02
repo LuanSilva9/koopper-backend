@@ -42,9 +42,6 @@ public class Tenant extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @Column(nullable = false, unique = false)
-    private boolean allowCrossDepartmentView;
-
     private LocalDateTime expiresDateContract;
 
     public Tenant(TenantRequestDTO tenantDto) {
@@ -53,6 +50,5 @@ public class Tenant extends BaseEntity {
         this.cnpj = tenantDto.cnpj();
         this.active = true;
         this.expiresDateContract = LocalDateTime.now().plusYears(1);
-        this.allowCrossDepartmentView = tenantDto.allowCrossDepartmentView();
     }
 }

@@ -47,6 +47,7 @@ public class DepartmentService extends BaseCrud<Department, UUID> {
         Department department = buscarPorId(id);
 
         department.setName(departmentEditableDto.name());
+        department.setAllowCrossDepartmentView(departmentEditableDto.allowCrossDepartmentView());
 
         return department;
     }
