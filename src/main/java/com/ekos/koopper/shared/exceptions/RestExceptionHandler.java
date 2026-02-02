@@ -29,7 +29,9 @@ public class RestExceptionHandler {
     // <----------------------->
 
     @ExceptionHandler({ResourceConflictException.class})
-    private ResponseEntity<ResponseExceptionDTO> handleConflict(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseExceptionDTO(exception.getMessage()));
+    private ResponseEntity<ResponseExceptionDTO> handleConflict(ResourceConflictException exception) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(new ResponseExceptionDTO(exception.getMessage()));
     }
 }
